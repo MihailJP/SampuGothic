@@ -115,8 +115,8 @@ def addsubset(subset, target):
 	subset[target] = buhin[target]
 	txtbuf = '$'+buhin[target]+'$'
 	for match in re.findall(r"(\$99:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:([^\$:]*)(?::[^\$]*)?)", txtbuf):
-		if match[1] not in subset:
-			addsubset(subset, match[1])
+		if match[1].strip() not in subset:
+			addsubset(subset, match[1].strip())
 
 ##############################################################################
 
@@ -182,7 +182,7 @@ for code in targets:
 	#LOG.write(code+" : ")
 	refGlyph = targetDict[code]
 	subset = {}
-	addsubset(subset, refGlyph)
+	addsubset(subset, refGlyph.strip())
 	partsdata = ""
 	for subsetKey in subset.keys():
 		partsdata += subsetKey+" "+subset[subsetKey]+"\n"
