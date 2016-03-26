@@ -19,12 +19,13 @@ dump_all_versions.txt: dump.tar.gz
 	tar xfz $< $@ && touch $@
 
 parts.txt: dump_newest_only.txt dump_all_versions.txt
-	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | ./replace-glyph.rb -l nisui-sanzui.csv -l variants.csv > $@
+	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | \
+	./replace-glyph.rb -l nisui-sanzui.csv -l variants.csv -l hiragana.csv -l katakana.csv > $@
 
 makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
 	cat kage/makettf/makeglyph.js | sed -f makeglyph-patch.sed > $@
 
-glyphs.txt: jisx-level1.lst
+glyphs.txt: hiragana.lst katakana.lst jisx-level1.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
 work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
