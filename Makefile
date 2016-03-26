@@ -1,6 +1,7 @@
-TARGETS=fetch
+TARGETS=work.sfd
 DOWNLOADABLES=dump.tar.gz
-GENERATABLES=dump_newest_only.txt dump_all_versions.txt parts.txt makeglyph.js
+GENERATABLES=dump_newest_only.txt dump_all_versions.txt parts.txt makeglyph.js \
+work.sfd work.scr work.log glyphs.txt
 
 .PHONY: all fetch clean distclean
 all: $(TARGETS)
@@ -23,8 +24,17 @@ parts.txt: dump_newest_only.txt dump_all_versions.txt
 makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
 	cat kage/makettf/makeglyph.js | sed -f makeglyph-patch.sed > $@
 
+glyphs.txt: jisx-level1.lst
+	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
+
+work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
+	./makesvg.py . work gothic 3
+	cd build; $(MAKE) -j`nproc`
+	export LANG=utf-8; fontforge -script work.scr >> work.log 2>&1
+
 clean:
 	rm -f $(TARGETS) $(GENERATABLES)
+	rm -rf build
 
 distclean: clean
 	rm -f $(DOWNLOADABLES)
