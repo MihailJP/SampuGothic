@@ -1,0 +1,2 @@
+New()
+Reencode("UnicodeFull")
