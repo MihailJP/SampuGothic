@@ -29,7 +29,7 @@ glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
 work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
-	./makesvg.py . work gothic 3
+	./makesvg.py . work gothic 5
 	cd build; $(MAKE) -j`nproc`
 	export LANG=utf-8; fontforge -script work.scr >> work.log 2>&1
 
