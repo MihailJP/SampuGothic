@@ -20,7 +20,7 @@ dump_all_versions.txt: dump.tar.gz
 
 parts.txt: dump_newest_only.txt dump_all_versions.txt
 	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | \
-	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv > $@
+	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv -l wakammuri.csv > $@
 
 makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
 	cat kage/makettf/makeglyph.js | sed -f makeglyph-patch.sed > $@
