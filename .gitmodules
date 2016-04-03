@@ -1,0 +1,3 @@
+[submodule "Inconsolata-LGC"]
+	path = Inconsolata-LGC
+	url = git@github.com:MihailJP/Inconsolata-LGC.git
