@@ -4,23 +4,49 @@
 FONTFORGE = "export LANG=utf-8; env fontforge"
 MAKEGLYPH = "/usr/bin/js ./makeglyph.js"
 MV = "/bin/mv"
-HEADER_FILENAME = "head.txt"
-PARTS_FILENAME = "parts.txt"
-FOOTER_FILENAME = "foot.txt"
-TEMPNAME = "temp"
 
-from sys import exit, argv as ARGV
+from sys import exit
 from os import system
 from os.path import exists
 from commands import getoutput
 import re
 import urllib
+from argparse import ArgumentParser
 
-if len(ARGV) != 5:
-	print "Usage: makettf.pl WorkingDirectory WorkingName Shotai Weight"
-	print "Shotai: mincho or gothic"
-	print "Weight: 1 3 5 7"
-	exit(1)
+parser = ArgumentParser()
+parser.add_argument(
+	'-H', '--header',
+	type=str, default='head.txt', metavar='FILENAME',
+	help="Specify script header file (default: head.txt)")
+parser.add_argument(
+	'-p', '--parts',
+	type=str, default='parts.txt', metavar='FILENAME',
+	help="Specify script header file (default: parts.txt)")
+parser.add_argument(
+	'-F', '--footer',
+	type=str, default='foot.txt', metavar='FILENAME',
+	help="Specify script footer file (default: foot.txt)")
+parser.add_argument(
+	'-s', '--svg-dir',
+	type=str, default='build', metavar='DIRNAME',
+	help="Specify temporary SVG directory (default: build)")
+parser.add_argument(
+	'-w', '--work-dir',
+	type=str, default='.', metavar='DIRNAME',
+	help="Specify working directory (default: .)")
+parser.add_argument(
+	'-t', '--target',
+	type=str, default='work', metavar='BASENAME',
+	help="Specify target file name (default: work)")
+parser.add_argument(
+	'shotai',
+	type=str,
+	help="Specify font face (mincho or gothic)")
+parser.add_argument(
+	'weight',
+	type=int,
+	help="Specify font weight (1, 3, 5, 7)")
+args = parser.parse_args()
 
 def unlink(filename):
 	import os, errno
@@ -36,14 +62,12 @@ def mkdir(dirname):
 	except OSError:
 		pass
 
-(WORKDIR, WORKNAME, SHOTAI, WEIGHT) = ARGV[1:5]
+unlink(args.work_dir+"/"+args.target+".log")
+unlink(args.work_dir+"/"+args.target+".scr")
+unlink(args.work_dir+"/"+args.target+".ttf")
+mkdir(args.work_dir+"/"+args.svg_dir)
 
-unlink(WORKDIR+"/"+WORKNAME+".log")
-unlink(WORKDIR+"/"+WORKNAME+".scr")
-unlink(WORKDIR+"/"+WORKNAME+".ttf")
-mkdir(WORKDIR+"/build")
-
-LOG = open(WORKDIR+"/"+WORKNAME+".log", "a")
+LOG = open(args.work_dir+"/"+args.target+".log", "a")
 
 buhin = {}
 targetDict = {}
@@ -51,9 +75,9 @@ targetDict = {}
 ##############################################################################
 
 def render(target, partsdata, code):
-	LOG.write(code+" : "+(" ".join([MAKEGLYPH, target, partsdata, SHOTAI, WEIGHT]))+"\n")
-	svgBaseName = WORKDIR+"/build/"+code
-	svgcmd = "cd ..; " + (" ".join([MAKEGLYPH, target, partsdata, SHOTAI, WEIGHT])) + " > build/" + code + ".raw.svg; cd build"
+	LOG.write(code+" : "+(" ".join([MAKEGLYPH, target, partsdata, args.shotai, str(args.weight)]))+"\n")
+	svgBaseName = args.work_dir+"/"+args.svg_dir+"/"+code
+	svgcmd = "cd ..; " + (" ".join([MAKEGLYPH, target, partsdata, args.shotai, str(args.weight)])) + " > " + args.svg_dir + "/" + code + ".raw.svg; cd " + args.svg_dir
 	needsUpdate = False
 	if not exists(svgBaseName+".sh"):
 		needsUpdate = True
@@ -80,7 +104,7 @@ def addglyph(code, refGlyph, target):
 	textbuf = """Print(0u{0})
 Select(0u{0})
 Clear()
-Import("{3}/build/{0}.svg")
+Import("{3}/{4}/{0}.svg")
 Scale(500)
 CanonicalContours()
 CanonicalStart()
@@ -91,10 +115,10 @@ Scale(20)
 SetWidth(1000)
 RoundToInt()
 AutoHint()
-""".format(code, refGlyph, target, WORKDIR)
+""".format(code, refGlyph, target, args.work_dir, args.svg_dir)
 	while True:
 		try:
-			FH = open(WORKDIR+"/"+WORKNAME+".scr", "a")
+			FH = open(args.work_dir+"/"+args.target+".scr", "a")
 		except IOError:
 			continue
 		FH.write(textbuf)
@@ -104,9 +128,9 @@ AutoHint()
 ##############################################################################
 
 def makefont():
-	textbuf = "Save(\""+WORKDIR+"/"+WORKNAME+".sfd\")\n"
+	textbuf = "Save(\""+args.work_dir+"/"+args.target+".sfd\")\n"
 	textbuf += "Quit()\n"
-	with open(WORKDIR+"/"+WORKNAME+".scr", "a") as FH:
+	with open(args.work_dir+"/"+args.target+".scr", "a") as FH:
 		FH.write(textbuf)
 
 ##############################################################################
@@ -121,9 +145,9 @@ def addsubset(subset, target):
 ##############################################################################
 
 # initialize
-if exists(WORKDIR+"/"+HEADER_FILENAME):
-	with open(WORKDIR+"/"+HEADER_FILENAME, "r") as FH:
-		with open(WORKDIR+"/"+WORKNAME+".scr", "a") as FH2:
+if exists(args.work_dir+"/"+args.header):
+	with open(args.work_dir+"/"+args.header, "r") as FH:
+		with open(args.work_dir+"/"+args.target+".scr", "a") as FH2:
 			for line in FH:
 				FH2.write(line)
 
@@ -135,8 +159,8 @@ else:
 
 # parse buhin
 temp = []
-if exists(WORKDIR+"/"+PARTS_FILENAME):
-	with open(WORKDIR+"/"+PARTS_FILENAME, "r") as FH:
+if exists(args.work_dir+"/"+args.parts):
+	with open(args.work_dir+"/"+args.parts, "r") as FH:
 		temp = FH.readlines()
 	LOG.write("Prepare parts file ... done.\n")
 else:
@@ -162,7 +186,7 @@ LOG.write("Prepare target code point ... done.\n")
 LOG.write("Prepare each glyph.\n")
 
 targets = sorted(list(set(targetDict.keys())))
-with open(WORKDIR+"/build/Makefile", "w") as FH:
+with open(args.work_dir+"/"+args.svg_dir+"/Makefile", "w") as FH:
 	FH.write("TARGETS=\\\n")
 	for code in targets:
 		FH.write(code + ".svg \\\n")
@@ -193,9 +217,9 @@ for code in targets:
 LOG.write("Prepare each glyph ... done.\n")
 
 # scripts footer
-if exists(WORKDIR+"/"+FOOTER_FILENAME):
-	with open(WORKDIR+"/"+FOOTER_FILENAME, "r") as FH:
-		with open(WORKDIR+"/"+WORKNAME+".scr", "a") as FH2:
+if exists(args.work_dir+"/"+args.footer):
+	with open(args.work_dir+"/"+args.footer, "r") as FH:
+		with open(args.work_dir+"/"+args.target+".scr", "a") as FH2:
 			for txtbuf in FH:
 				FH2.write(txtbuf)
 	

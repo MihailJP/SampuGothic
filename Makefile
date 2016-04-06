@@ -1,7 +1,16 @@
-TARGETS=work.sfd
+TARGETS=SampuGothic.ttf SampuGothic-Italic.ttf SampuGothic-Bold.ttf SampuGothic-BoldItalic.ttf
 DOWNLOADABLES=dump.tar.gz
 GENERATABLES=dump_newest_only.txt dump_all_versions.txt parts.txt makeglyph.js \
-work.sfd work.scr work.log glyphs.txt
+work.sfd work.scr work.log glyphs.txt \
+work-scaled.sfd work-scaled-obl.sfd \
+Inconsolata-LGC.sfd Inconsolata-LGC-Italic.sfd \
+work-b.sfd work-b.scr work-b.log \
+work-b-scaled.sfd work-b-scaled-obl.sfd \
+Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd
+
+FONT_NAME_E=Sampu Gothic
+FONT_NAME_J=算譜ゴシック
+FONT_OPTIONS=-n SampuGothic -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)"
 
 .PHONY: all fetch clean distclean
 all: $(TARGETS)
@@ -29,13 +38,45 @@ glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
 work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
-	./makesvg.py . work gothic 5
+	./makesvg.py gothic 4
 	cd build; $(MAKE) -j`nproc`
 	export LANG=utf-8; fontforge -script work.scr >> work.log 2>&1
+
+work-scaled.sfd: work.sfd
+	./adjustFont.py -sw1226 $< $@
+work-scaled-obl.sfd: work.sfd
+	./adjustFont.py -sw1226 -k10 $< $@
+
+work-b.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
+	./makesvg.py -s build-b -t work-b gothic 7
+	cd build-b; $(MAKE) -j`nproc`
+	export LANG=utf-8; fontforge -script work-b.scr >> work-b.log 2>&1
+
+work-b-scaled.sfd: work-b.sfd
+	./adjustFont.py -sw1226 $< $@
+work-b-scaled-obl.sfd: work-b.sfd
+	./adjustFont.py -sw1226 -k10 $< $@
+
+Inconsolata-LGC-Bold.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC/Inconsolata-LGC-BoldItalic.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+
+SampuGothic-Bold.ttf: Inconsolata-LGC-Bold.sfd work-b-scaled.sfd
+	./adjustFont.py -g $(FONT_OPTIONS) \
+	-l "$(FONT_NAME_E) Bold" -L "0x0411:$(FONT_NAME_J) 太字" \
+	-t "Bold" -T "0x0411:太字" --os2-weight=700 \
+	-m work-b-scaled.sfd $< $@
+SampuGothic-BoldItalic.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl.sfd
+	./adjustFont.py -g $(FONT_OPTIONS) \
+	-l "$(FONT_NAME_E) Bold Italic" -L "0x0411:$(FONT_NAME_J) 太字斜体" \
+	-t "Bold Italic" -T "0x0411:太字斜体" --os2-weight=700 \
+	-m work-b-scaled-obl.sfd $< $@
 
 clean:
 	rm -f $(TARGETS) $(GENERATABLES)
 	rm -rf build
+	rm -rf build-b
 
 distclean: clean
 	rm -f $(DOWNLOADABLES)
