@@ -2,7 +2,8 @@ TARGETS=SampuGothic.ttf SampuGothic-Italic.ttf
 DOWNLOADABLES=dump.tar.gz
 GENERATABLES=dump_newest_only.txt dump_all_versions.txt parts.txt makeglyph.js \
 work.sfd work.scr work.log glyphs.txt \
-work-scaled.sfd work-scaled-obl.sfd
+work-scaled.sfd work-scaled-obl.sfd \
+Inconsolata-LGC.sfd Inconsolata-LGC-Italic.sfd
 
 FONT_NAME_E=Sampu Gothic
 FONT_NAME_J=算譜ゴシック
@@ -43,15 +44,20 @@ work-scaled.sfd: work.sfd
 work-scaled-obl.sfd: work.sfd
 	./adjustFont.py -sw1226 -k10 $< $@
 
-SampuGothic.ttf: Inconsolata-LGC/Inconsolata-LGC.sfd work-scaled.sfd
+Inconsolata-LGC.sfd: Inconsolata-LGC/Inconsolata-LGC.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+Inconsolata-LGC-Italic.sfd: Inconsolata-LGC/Inconsolata-LGC-Italic.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+
+SampuGothic.ttf: Inconsolata-LGC.sfd work-scaled.sfd
 	./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E)" -L "0x0411:$(FONT_NAME_J)" \
-	-t "Regular" -T "0x0411:標準" \
+	-t "Regular" -T "0x0411:標準" --os2-weight=400 \
 	-m work-scaled.sfd $< $@
-SampuGothic-Italic.ttf: Inconsolata-LGC/Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
+SampuGothic-Italic.ttf: Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
 	./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E) Italic" -L "0x0411:$(FONT_NAME_J) 斜体" \
-	-t "Italic" -T "0x0411:斜体" \
+	-t "Italic" -T "0x0411:斜体" --os2-weight=400 \
 	-m work-scaled-obl.sfd $< $@
 
 clean:

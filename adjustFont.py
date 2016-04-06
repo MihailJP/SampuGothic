@@ -62,6 +62,14 @@ parser.add_argument(
 	action='append', type=str, metavar='LANGID:NAME',
 	help="Same as -N LANGID:2:NAME")
 parser.add_argument(
+	'--os2-weight',
+	type=int, metavar='WEIGHT',
+	help="Specify OS/2 weight")
+parser.add_argument(
+	'--os2-family-class',
+	type=int, metavar='FAMILY',
+	help="Specify OS/2 family class")
+parser.add_argument(
 	'-m', '--merge-with',
 	action='append', type=str, metavar='FILENAME',
 	help="Merge specified fonts (may be specified more than once)")
@@ -94,6 +102,11 @@ if args.full_name is not None:
 	font.fullname = args.full_name
 if args.weight is not None:
 	font.weight = args.weight
+
+if args.os2_weight is not None:
+	font.os2_weight = args.os2_weight
+if args.os2_family_class is not None:
+	font.os2_family_class = args.os2_family_class
 
 sfnt = []
 def addSfntNames(lst, strid = None):
