@@ -17,6 +17,14 @@ a \
   kage.kMinWidthU = 1;
 }
 /} else if(arguments\[3\] == 5){/ {
+i \
+} else if(arguments[3] == 4){\
+  kage.kMinWidthY = 2.5;\
+  kage.kMinWidthU = 2.5;\
+  kage.kMinWidthT = 7;\
+  kage.kWidth = 6;\
+  kage.kKakato = 2.5;\
+  kage.kMage = 11.5;
 n
 a \
   kage.kMinWidthU = 3;
