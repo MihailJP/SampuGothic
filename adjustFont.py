@@ -189,6 +189,7 @@ if args.merge_with is not None:
 				font.selection.select(('more',), glyph.glyphname)
 		font2.copy()
 		font.paste()
+		font.copyright += "\n\n" + font2.copyright
 		font2.close()
 
 if args.round_to_int:
