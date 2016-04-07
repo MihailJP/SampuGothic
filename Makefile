@@ -63,6 +63,32 @@ SampuGothic-Italic.ttf: Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
 	-t "Italic" -T "0x0411:斜体" --os2-weight=400 \
 	-m work-scaled-obl.sfd $< $@
 
+work-b.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
+	./makesvg.py -s build-b -t work-b gothic 7
+	cd build-b; $(MAKE) -j`nproc`
+	export LANG=utf-8; fontforge -script work-b.scr >> work-b.log 2>&1
+
+work-b-scaled.sfd: work-b.sfd
+	./adjustFont.py -sw1226 $< $@
+work-b-scaled-obl.sfd: work-b.sfd
+	./adjustFont.py -sw1226 -k10 $< $@
+
+Inconsolata-LGC-Bold.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC/Inconsolata-LGC-BoldItalic.sfd
+	cat $^ | sed -e '/^Panose/d' > $@
+
+SampuGothic-Bold.ttf: Inconsolata-LGC-Bold.sfd work-b-scaled.sfd
+	./adjustFont.py -g $(FONT_OPTIONS) \
+	-l "$(FONT_NAME_E) Bold" -L "0x0411:$(FONT_NAME_J) 太字" \
+	-t "Bold" -T "0x0411:太字" --os2-weight=700 \
+	-m work-b-scaled.sfd $< $@
+SampuGothic-BoldItalic.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl.sfd
+	./adjustFont.py -g $(FONT_OPTIONS) \
+	-l "$(FONT_NAME_E) Bold Italic" -L "0x0411:$(FONT_NAME_J) 太字斜体" \
+	-t "Bold Italic" -T "0x0411:太字斜体" --os2-weight=700 \
+	-m work-b-scaled-obl.sfd $< $@
+
 clean:
 	rm -f $(TARGETS) $(GENERATABLES)
 	rm -rf build
