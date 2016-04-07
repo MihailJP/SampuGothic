@@ -62,9 +62,9 @@ parser.add_argument(
 	action='append', type=str, metavar='LANGID:NAME',
 	help="Same as -N LANGID:2:NAME")
 parser.add_argument(
-	'--os2-weight',
+	'-W', '--os2-weight',
 	type=int, metavar='WEIGHT',
-	help="Specify OS/2 weight")
+	help="Specify OS/2 weight (400 for regular, 700 for bold)")
 parser.add_argument(
 	'--os2-family-class',
 	type=int, metavar='FAMILY',
