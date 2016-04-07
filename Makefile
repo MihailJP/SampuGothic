@@ -10,7 +10,8 @@ Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd
 
 FONT_NAME_E=Sampu Gothic
 FONT_NAME_J=算譜ゴシック
-FONT_OPTIONS=-n SampuGothic -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)"
+FONT_VERSION=0.1
+FONT_OPTIONS=-n SampuGothic -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)" -V "$(FONT_VERSION)" -r
 
 .PHONY: all fetch clean distclean
 all: $(TARGETS)
