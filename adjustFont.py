@@ -116,8 +116,8 @@ if args.os2_weight is not None:
 if args.os2_family_class is not None:
 	font.os2_family_class = args.os2_family_class
 
-if args.version is not None:
-	font.version = args.version
+if args.font_version is not None:
+	font.version = args.font_version
 
 sfnt = []
 def addSfntNames(lst, strid = None):
