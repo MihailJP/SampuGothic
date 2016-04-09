@@ -46,6 +46,10 @@ parser.add_argument(
 	type=str, metavar='NAME',
 	help="Specify subfamily (font weight)")
 parser.add_argument(
+	'-V', '--font-version',
+	type=str, metavar='VERSION',
+	help="Set font version")
+parser.add_argument(
 	'-N', '--sfnt-name',
 	action='append', type=str, metavar='LANGID:STRID:NAME',
 	help="Specify SFNT name (may be specified more than once)")
@@ -62,9 +66,9 @@ parser.add_argument(
 	action='append', type=str, metavar='LANGID:NAME',
 	help="Same as -N LANGID:2:NAME")
 parser.add_argument(
-	'--os2-weight',
+	'-W', '--os2-weight',
 	type=int, metavar='WEIGHT',
-	help="Specify OS/2 weight")
+	help="Specify OS/2 weight (400 for regular, 700 for bold)")
 parser.add_argument(
 	'--os2-family-class',
 	type=int, metavar='FAMILY',
@@ -73,6 +77,10 @@ parser.add_argument(
 	'-m', '--merge-with',
 	action='append', type=str, metavar='FILENAME',
 	help="Merge specified fonts (may be specified more than once)")
+parser.add_argument(
+	'-r', '--round-to-int',
+	action='store_true', default=False,
+	help="Round coordinates to integer")
 parser.add_argument(
 	'srcfile',
 	type=str,
@@ -107,6 +115,9 @@ if args.os2_weight is not None:
 	font.os2_weight = args.os2_weight
 if args.os2_family_class is not None:
 	font.os2_family_class = args.os2_family_class
+
+if args.font_version is not None:
+	font.version = args.font_version
 
 sfnt = []
 def addSfntNames(lst, strid = None):
@@ -178,7 +189,15 @@ if args.merge_with is not None:
 				font.selection.select(('more',), glyph.glyphname)
 		font2.copy()
 		font.paste()
+		font.copyright += "\n\n" + font2.copyright
 		font2.close()
+
+if args.round_to_int:
+	font.selection.none()
+	for glyph in glyphsWorthOutputting(font):
+			font.selection.select(('more',), glyph.glyphname)
+	font.round()
+
 if args.generate:
 	font.generate(args.destfile)
 else:
