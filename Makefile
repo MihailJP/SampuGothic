@@ -35,7 +35,7 @@ parts.txt: dump_newest_only.txt dump_all_versions.txt
 makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
 	cat kage/makettf/makeglyph.js | sed -f makeglyph-patch.sed > $@
 
-glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst
+glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst jisx-level2.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
 work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
