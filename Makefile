@@ -13,6 +13,9 @@ Inconsolata-LGC.raw.ttx Inconsolata-LGC-Italic.raw.ttx \
 Inconsolata-LGC-Bold.raw.ttx Inconsolata-LGC-BoldItalic.raw.ttx \
 Inconsolata-LGC.sfd Inconsolata-LGC-Italic.sfd \
 Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd
+ARCHIVE_CONTENTS=$(TARGETS) LICENSE LICENSE.kage.engine \
+LICENSE.kage.glyphs README.md
+ARCHIVES=SampuGothic.tar.xz
 
 FONT_NAME_E=Sampu Gothic
 FONT_NAME_J=算譜ゴシック
@@ -125,10 +128,17 @@ SampuGothic-Bold.ttf: SampuGothic-Bold.ttx
 SampuGothic-BoldItalic.ttf: SampuGothic-BoldItalic.ttx
 	$(TTX_COMMAND)
 
+SampuGothic.tar.xz: $(ARCHIVE_CONTENTS)
+	mkdir -p SampuGothic && cp $^ SampuGothic && tar cfvJ $@ SampuGothic && rm -rf SampuGothic
+
+.PHONY: dist
+dist: $(ARCHIVES)
+
 clean:
-	rm -f $(TARGETS) $(GENERATABLES)
+	rm -f $(TARGETS) $(GENERATABLES) $(ARCHIVES)
 	rm -rf build
 	rm -rf build-b
+	rm -rf SampuGothic
 
 distclean: clean
 	rm -f $(DOWNLOADABLES)
