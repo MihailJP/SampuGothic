@@ -12,9 +12,10 @@ Inconsolata-LGC-Bold.raw.ttf Inconsolata-LGC-BoldItalic.raw.ttf \
 Inconsolata-LGC.raw.ttx Inconsolata-LGC-Italic.raw.ttx \
 Inconsolata-LGC-Bold.raw.ttx Inconsolata-LGC-BoldItalic.raw.ttx \
 Inconsolata-LGC.sfd Inconsolata-LGC-Italic.sfd \
-Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd
+Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd \
+ChangeLog
 ARCHIVE_CONTENTS=$(TARGETS) LICENSE LICENSE.kage.engine \
-LICENSE.kage.glyphs README.md
+LICENSE.kage.glyphs README.md ChangeLog
 ARCHIVES=SampuGothic.tar.xz
 
 FONT_NAME_E=Sampu Gothic
@@ -127,6 +128,9 @@ SampuGothic-Bold.ttf: SampuGothic-Bold.ttx
 	$(TTX_COMMAND)
 SampuGothic-BoldItalic.ttf: SampuGothic-BoldItalic.ttx
 	$(TTX_COMMAND)
+
+ChangeLog:
+	./mkchglog.rb > $@
 
 SampuGothic.tar.xz: $(ARCHIVE_CONTENTS)
 	mkdir -p SampuGothic && cp $^ SampuGothic && tar cfvJ $@ SampuGothic && rm -rf SampuGothic
