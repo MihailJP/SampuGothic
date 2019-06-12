@@ -13,6 +13,7 @@ Inconsolata-LGC.raw.ttx Inconsolata-LGC-Italic.raw.ttx \
 Inconsolata-LGC-Bold.raw.ttx Inconsolata-LGC-BoldItalic.raw.ttx \
 Inconsolata-LGC.sfd Inconsolata-LGC-Italic.sfd \
 Inconsolata-LGC-Bold.sfd Inconsolata-LGC-BoldItalic.sfd \
+$(TARGETS:.ttf=.ttx) $(TARGETS:.ttf=.raw.ttx) $(TARGETS:.ttf=.raw.ttf) \
 ChangeLog
 ARCHIVE_CONTENTS=$(TARGETS) LICENSE LICENSE.kage.engine \
 LICENSE.kage.glyphs README.md ChangeLog
