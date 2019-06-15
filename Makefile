@@ -59,9 +59,14 @@ work-scaled.sfd: work.sfd
 work-scaled-obl.sfd: work.sfd
 	./adjustFont.py -sw1226 -k10 $< $@
 
-Inconsolata-LGC.sfd: Inconsolata-LGC/Inconsolata-LGC.sfd
+.INTERMEDIATE: Inconsolata-LGC.tmp.sfd Inconsolata-LGC-Italic.tmp.sfd
+Inconsolata-LGC.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC.sfd
+	./fullwidth.py $< $@
+Inconsolata-LGC-Italic.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-Italic.sfd
+	./fullwidth.py $< $@
+Inconsolata-LGC.sfd: Inconsolata-LGC.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
-Inconsolata-LGC-Italic.sfd: Inconsolata-LGC/Inconsolata-LGC-Italic.sfd
+Inconsolata-LGC-Italic.sfd: Inconsolata-LGC-Italic.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 
 SampuGothic.raw.ttf: Inconsolata-LGC.sfd work-scaled.sfd
@@ -85,9 +90,14 @@ work-b-scaled.sfd: work-b.sfd
 work-b-scaled-obl.sfd: work-b.sfd
 	./adjustFont.py -sw1226 -k10 $< $@
 
-Inconsolata-LGC-Bold.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
+.INTERMEDIATE: Inconsolata-LGC-Bold.tmp.sfd Inconsolata-LGC-BoldItalic.tmp.sfd
+Inconsolata-LGC-Bold.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
+	./fullwidth.py $< $@
+Inconsolata-LGC-BoldItalic.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-BoldItalic.sfd
+	./fullwidth.py $< $@
+Inconsolata-LGC-Bold.sfd: Inconsolata-LGC-Bold.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
-Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC/Inconsolata-LGC-BoldItalic.sfd
+Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC-BoldItalic.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 
 SampuGothic-Bold.raw.ttf: Inconsolata-LGC-Bold.sfd work-b-scaled.sfd
