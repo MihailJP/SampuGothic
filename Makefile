@@ -24,7 +24,7 @@ FONT_NAME_J=算譜ゴシック
 FONT_VERSION=0.1
 FONT_OPTIONS=-n SampuGothic -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)" -V "$(FONT_VERSION)" -r
 
-.PHONY: all fetch clean distclean
+.PHONY: all fetch clean distclean mostlyclean
 all: $(TARGETS)
 
 .DELETE_ON_ERROR: $(GENERATABLES) $(DOWNLOADABLES)
@@ -134,11 +134,13 @@ SampuGothic.tar.xz: $(ARCHIVE_CONTENTS)
 .PHONY: dist
 dist: $(ARCHIVES)
 
-clean:
+mostlyclean:
 	rm -f $(TARGETS) $(GENERATABLES) $(ARCHIVES)
+	rm -rf SampuGothic
+
+clean: mostlyclean
 	rm -rf build
 	rm -rf build-b
-	rm -rf SampuGothic
 
 distclean: clean
 	rm -f $(DOWNLOADABLES)
