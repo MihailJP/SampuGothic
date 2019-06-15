@@ -49,11 +49,14 @@ makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
 glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst jisx-level2.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
-work.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
+.INTERMEDIATE: work.scr
+work.scr: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
 	./makesvg.py gothic 4
+work.sfd: work.scr
 	cd build; $(MAKE) -j`nproc`
 	export LANG=utf-8; fontforge -script work.scr >> work.log 2>&1
 
+.INTERMEDIATE: work-scaled.sfd work-scaled-obl.sfd
 work-scaled.sfd: work.sfd
 	./adjustFont.py -sw1226 $< $@
 work-scaled-obl.sfd: work.sfd
@@ -80,11 +83,14 @@ SampuGothic-Italic.raw.ttf: Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
 	-t "Italic" -T "0x0411:斜体" --os2-weight=400 \
 	-m work-scaled-obl.sfd $< $@
 
-work-b.sfd: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
+.INTERMEDIATE: work-b.scr
+work-b.scr: head.txt parts.txt foot.txt makeglyph.js glyphs.txt
 	./makesvg.py -s build-b -t work-b gothic 7
+work-b.sfd: work-b.scr
 	cd build-b; $(MAKE) -j`nproc`
 	export LANG=utf-8; fontforge -script work-b.scr >> work-b.log 2>&1
 
+.INTERMEDIATE: work-b-scaled.sfd work-b-scaled-obl.sfd
 work-b-scaled.sfd: work-b.sfd
 	./adjustFont.py -sw1226 $< $@
 work-b-scaled-obl.sfd: work-b.sfd
@@ -111,34 +117,13 @@ SampuGothic-BoldItalic.raw.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl
 	-t "Bold Italic" -T "0x0411:太字斜体" --os2-weight=700 \
 	-m work-b-scaled-obl.sfd $< $@
 
-TTX_COMMAND=ttx -o $@ $<
-SampuGothic.raw.ttx: SampuGothic.raw.ttf
-	$(TTX_COMMAND)
-SampuGothic-Italic.raw.ttx: SampuGothic-Italic.raw.ttf
-	$(TTX_COMMAND)
-SampuGothic-Bold.raw.ttx: SampuGothic-Bold.raw.ttf
-	$(TTX_COMMAND)
-SampuGothic-BoldItalic.raw.ttx: SampuGothic-BoldItalic.raw.ttf
-	$(TTX_COMMAND)
-
-SET_FIXED_PITCH_FLAG=cat $< | sed -e '/isFixedPitch/c <isFixedPitch value="1"/>' -e '/bProportion/c <bProportion value="9"/>' > $@
-SampuGothic.ttx: SampuGothic.raw.ttx
-	$(SET_FIXED_PITCH_FLAG)
-SampuGothic-Italic.ttx: SampuGothic-Italic.raw.ttx
-	$(SET_FIXED_PITCH_FLAG)
-SampuGothic-Bold.ttx: SampuGothic-Bold.raw.ttx
-	$(SET_FIXED_PITCH_FLAG)
-SampuGothic-BoldItalic.ttx: SampuGothic-BoldItalic.raw.ttx
-	$(SET_FIXED_PITCH_FLAG)
-
-SampuGothic.ttf: SampuGothic.ttx
-	$(TTX_COMMAND)
-SampuGothic-Italic.ttf: SampuGothic-Italic.ttx
-	$(TTX_COMMAND)
-SampuGothic-Bold.ttf: SampuGothic-Bold.ttx
-	$(TTX_COMMAND)
-SampuGothic-BoldItalic.ttf: SampuGothic-BoldItalic.ttx
-	$(TTX_COMMAND)
+.INTERMEDIATE: $(TARGETS:.ttf=.ttx) $(TARGETS:.ttf=.raw.ttx) $(TARGETS:.ttf=.raw.ttf)
+%.raw.ttx: %.raw.ttf
+	ttx -o $@ $<
+%.ttx: %.raw.ttx
+	cat $< | sed -e '/isFixedPitch/c <isFixedPitch value="1"/>' -e '/bProportion/c <bProportion value="9"/>' > $@
+%.ttf: %.ttx
+	ttx -o $@ $<
 
 ChangeLog:
 	./mkchglog.rb > $@
