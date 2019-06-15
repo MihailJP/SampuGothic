@@ -88,7 +88,7 @@ def render(target, partsdata, code):
 	if needsUpdate:
 		with open(svgBaseName+".sh", "w") as FH:
 			FH.write(svgcmd + "\n")
-			FH.write("convert {0}.raw.svg -density 1200 -resize 1024x1024 -background white -flatten -alpha off {0}.bmp\n".format(code))
+			FH.write("convert {0}.raw.svg -density 400 -resize 400x400 -background white -flatten -alpha off {0}.bmp\n".format(code))
 			FH.write("if [ $? -ne 0 ]; then exit 2; fi\n")
 			FH.write("potrace -s {0}.bmp -o {0}.svg\n".format(code))
 			FH.write("if [ $? -ne 0 ]; then exit 2; fi\n")
