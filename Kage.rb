@@ -42,6 +42,12 @@ module Kage
 		def ref?
 			@data[0] == 99
 		end
+		def function?
+			@data[0] == 0 and @data[1] > 0
+		end
+		def null?
+			@data[0] == 0 and @data[1] == 0
+		end
 		def to_s
 			@data.join(":")
 		end
@@ -49,7 +55,7 @@ module Kage
 			@data.dup
 		end
 		def strokelength
-			case @data[0]
+			case @data[0] % 100
 			when 1
 				return Math.hypot(@data[5] - @data[3], @data[6] - @data[4])
 			when 2, 3, 4
@@ -76,9 +82,9 @@ module Kage
 			raise TypeError, "Not a Fixnum instance" unless val.is_a? Fixnum
 			origType = @data[0]
 			case origType
-			when 1
+			when 0, 1
 				case val
-				when 1
+				when 0, 1
 				when 2, 3, 4
 					@data.insert(5, (@data[3] + @data[5]) / 2, (@data[4] + @data[6]) / 2)
 				when 6, 7
@@ -88,7 +94,7 @@ module Kage
 				end
 			when 2, 3, 4
 				case val
-				when 1
+				when 0, 1
 					@data[5..8] = @data[7..8]
 				when 2, 3, 4
 				when 6, 7
@@ -98,7 +104,7 @@ module Kage
 				end
 			when 6, 7
 				case val
-				when 1
+				when 0, 1
 					@data[5..10] = @data[9..10]
 				when 2, 3, 4
 					@data[5..8] = [(@data[5] + @data[7]) / 2, (@data[6] + @data[8]) / 2]
@@ -120,15 +126,16 @@ module Kage
 			@data[2] = val
 		end
 		def startPoint
-			case @data[0]
-			when 1, 2, 3, 4, 6, 7, 99
+			return nil if self.null?
+			case @data[0] % 100
+			when 0, 1, 2, 3, 4, 6, 7, 99
 				return @data[3..4].dup
 			else
 				return nil
 			end
 		end
 		def controlPoint1
-			case @data[0]
+			case @data[0] % 100
 			when 2, 3, 4, 6, 7
 				return @data[5..6].dup
 			else
@@ -136,7 +143,7 @@ module Kage
 			end
 		end
 		def controlPoint2
-			case @data[0]
+			case @data[0] % 100
 			when 2, 3, 4
 				return @data[5..6].dup
 			when 6, 7
@@ -146,7 +153,7 @@ module Kage
 			end
 		end
 		def controlPoint
-			case @data[0]
+			case @data[0] % 100
 			when 2, 3, 4
 				return @data[5..6].dup
 			when 6, 7
@@ -156,8 +163,9 @@ module Kage
 			end
 		end
 		def endPoint
-			case @data[0]
-			when 1, 99
+			return nil if self.null?
+			case @data[0] % 100
+			when 0, 1, 99
 				return @data[5..6]
 			when 2, 3, 4
 				return @data[7..8]
@@ -173,7 +181,7 @@ module Kage
 		end
 		def controlPoint1=(a)
 			raise TypeError, "Not an Array of 2 Fixnum instances" unless a.is_a? Array and a.length == 2 and a.all?{|elem| elem.is_a? Fixnum}
-			case @data[0]
+			case @data[0] % 100
 			when 2, 3, 4, 6, 7
 				@data[5..6] = a
 			else
@@ -182,7 +190,7 @@ module Kage
 		end
 		def controlPoint2=(a)
 			raise TypeError, "Not an Array of 2 Fixnum instances" unless a.is_a? Array and a.length == 2 and a.all?{|elem| elem.is_a? Fixnum}
-			case @data[0]
+			case @data[0] % 100
 			when 2, 3, 4
 				@data[5..6] = a
 			when 6, 7
@@ -193,9 +201,13 @@ module Kage
 		end
 		def endPoint=(a)
 			raise TypeError, "Not an Array of 2 Fixnum instances" unless a.is_a? Array and a.length == 2 and a.all?{|elem| elem.is_a? Fixnum}
-			case @data[0]
-			when 1, 99
-				@data[5..6] = a
+			case @data[0] % 100
+			when 0, 1, 99
+				if @data[0] == 0 and @data[1] == 0 then
+					raise RuntimeError, "Stroke type is invalid"
+				else
+					@data[5..6] = a
+				end
 			when 2, 3, 4
 				@data[7..8] = a
 			when 6, 7
@@ -268,10 +280,10 @@ module Kage
 			(@name, gStr) = str.split(/\t/)
 			@name.gsub!(/\\@/, '@')
 			@strokes = (gStr.split(/\$/)).map {|elem| Stroke.new(elem)}
-			if (@strokes.reject {|stroke| stroke.strokeType == 0}).empty? then
+			if (@strokes.reject {|stroke| stroke.null?}).empty? then
 				@strokes = @strokes.take(1)
 			else
-				@strokes.reject! {|stroke| stroke.strokeType == 0}
+				@strokes.reject! {|stroke| stroke.null?}
 			end
 		end
 		def initialize_copy(glyph)
