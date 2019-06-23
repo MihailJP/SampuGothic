@@ -39,7 +39,9 @@ dump_newest_only.txt: dump.tar.gz
 dump_all_versions.txt: dump.tar.gz
 	tar xfz $< $@ && touch $@
 
-parts.txt: dump_newest_only.txt dump_all_versions.txt
+parts.txt: dump_newest_only.txt dump_all_versions.txt \
+mkparts.pl kage-roofed-l2rd.rb replace-glyph.rb \
+nisui-sanzui.csv variants.csv jisx-0208-hikanji.csv wakammuri.csv
 	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | \
 	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv -l wakammuri.csv > $@
 
