@@ -1,9 +1,6 @@
 [submodule "engine"]
 	path = engine
 	url = git@github.com:MihailJP/kage-engine.git
-[submodule "kage"]
-	path = kage
-	url = http://git.chise.org/git/chise/kage.git
 [submodule "Inconsolata-LGC"]
 	path = Inconsolata-LGC
 	url = git@github.com:MihailJP/Inconsolata-LGC.git

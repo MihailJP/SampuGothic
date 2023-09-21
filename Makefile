@@ -45,8 +45,8 @@ nisui-sanzui.csv variants.csv jisx-0208-hikanji.csv wakammuri.csv
 	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | \
 	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv -l wakammuri.csv > $@
 
-makeglyph.js: kage/makettf/makeglyph.js makeglyph-patch.sed
-	cat kage/makettf/makeglyph.js | sed -f makeglyph-patch.sed > $@
+makeglyph.js: makeglyph/makeglyph.js makeglyph-patch.sed
+	cat makeglyph/makeglyph.js | sed -f makeglyph-patch.sed > $@
 
 glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst jisx-level2.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
