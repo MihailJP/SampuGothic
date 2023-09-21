@@ -60,27 +60,27 @@ work.sfd: work.scr
 
 .INTERMEDIATE: work-scaled.sfd work-scaled-obl.sfd
 work-scaled.sfd: work.sfd
-	./adjustFont.py -sw1226 $< $@
+	fontforge ./adjustFont.py -sw1226 $< $@
 work-scaled-obl.sfd: work.sfd
-	./adjustFont.py -sw1226 -k10 $< $@
+	fontforge ./adjustFont.py -sw1226 -k10 $< $@
 
 .INTERMEDIATE: Inconsolata-LGC.tmp.sfd Inconsolata-LGC-Italic.tmp.sfd
 Inconsolata-LGC.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC.sfd
-	./fullwidth.py $< $@
+	fontforge ./fullwidth.py $< $@
 Inconsolata-LGC-Italic.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-Italic.sfd
-	./fullwidth.py $< $@
+	fontforge ./fullwidth.py $< $@
 Inconsolata-LGC.sfd: Inconsolata-LGC.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 Inconsolata-LGC-Italic.sfd: Inconsolata-LGC-Italic.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 
 SampuGothic.raw.ttf: Inconsolata-LGC.sfd work-scaled.sfd
-	./adjustFont.py -g $(FONT_OPTIONS) \
+	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E)" -L "0x0411:$(FONT_NAME_J)" \
 	-t "Regular" -T "0x0411:標準" --os2-weight=400 \
 	-m work-scaled.sfd $< $@
 SampuGothic-Italic.raw.ttf: Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
-	./adjustFont.py -g $(FONT_OPTIONS) \
+	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E) Italic" -L "0x0411:$(FONT_NAME_J) 斜体" \
 	-t "Italic" -T "0x0411:斜体" --os2-weight=400 \
 	-m work-scaled-obl.sfd $< $@
@@ -94,27 +94,27 @@ work-b.sfd: work-b.scr
 
 .INTERMEDIATE: work-b-scaled.sfd work-b-scaled-obl.sfd
 work-b-scaled.sfd: work-b.sfd
-	./adjustFont.py -sw1226 $< $@
+	fontforge ./adjustFont.py -sw1226 $< $@
 work-b-scaled-obl.sfd: work-b.sfd
-	./adjustFont.py -sw1226 -k10 $< $@
+	fontforge ./adjustFont.py -sw1226 -k10 $< $@
 
 .INTERMEDIATE: Inconsolata-LGC-Bold.tmp.sfd Inconsolata-LGC-BoldItalic.tmp.sfd
 Inconsolata-LGC-Bold.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
-	./fullwidth.py $< $@
+	fontforge ./fullwidth.py $< $@
 Inconsolata-LGC-BoldItalic.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-BoldItalic.sfd
-	./fullwidth.py $< $@
+	fontforge ./fullwidth.py $< $@
 Inconsolata-LGC-Bold.sfd: Inconsolata-LGC-Bold.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC-BoldItalic.tmp.sfd
 	cat $^ | sed -e '/^Panose/d' > $@
 
 SampuGothic-Bold.raw.ttf: Inconsolata-LGC-Bold.sfd work-b-scaled.sfd
-	./adjustFont.py -g $(FONT_OPTIONS) \
+	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E) Bold" -L "0x0411:$(FONT_NAME_J) 太字" \
 	-t "Bold" -T "0x0411:太字" --os2-weight=700 \
 	-m work-b-scaled.sfd $< $@
 SampuGothic-BoldItalic.raw.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl.sfd
-	./adjustFont.py -g $(FONT_OPTIONS) \
+	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
 	-l "$(FONT_NAME_E) Bold Italic" -L "0x0411:$(FONT_NAME_J) 太字斜体" \
 	-t "Bold Italic" -T "0x0411:太字斜体" --os2-weight=700 \
 	-m work-b-scaled-obl.sfd $< $@
