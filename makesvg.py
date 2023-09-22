@@ -8,10 +8,13 @@ MV = "/bin/mv"
 from sys import exit
 from os import system
 from os.path import exists
-from commands import getoutput
 import re
-import urllib
 from argparse import ArgumentParser
+try:
+	from urllib.parse import quote_plus
+except ImportError:
+	from urllib import quote_plus
+
 
 parser = ArgumentParser()
 parser.add_argument(
@@ -207,8 +210,8 @@ for code in targets:
 	partsdata = ""
 	for subsetKey in subset.keys():
 		partsdata += subsetKey+" "+subset[subsetKey]+"\n"
-	target = urllib.quote_plus(refGlyph.encode('utf-8'))
-	partsdata = urllib.quote_plus(partsdata.encode('utf-8'))
+	target = quote_plus(refGlyph.encode('utf-8'))
+	partsdata = quote_plus(partsdata.encode('utf-8'))
 	render(target, partsdata, code)
 	addglyph(code, refGlyph, target)
 LOG.write("Prepare each glyph ... done.\n")
