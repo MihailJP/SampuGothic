@@ -3,6 +3,7 @@
 // weight ... 1 3 5 7
 
 load("engine/2d.js");
+load("engine/curve.js");
 load("engine/polygon.js");
 load("engine/polygons.js");
 load("engine/buhin.js");
