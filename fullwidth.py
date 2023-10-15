@@ -8,10 +8,11 @@ import math
 font = fontforge.open(sys.argv[1])
 font.encoding='UnicodeBmp'
 font.selection.select(('ranges',), 0x21, 0x7e)
+font.selection.select(('more',), 0xa5)
 font.copy()
-font.selection.select(0xff01)
-font.paste()
 font.selection.select(('ranges',), 0xff01, 0xff5e)
+font.selection.select(('more',), 0xffe5)
+font.paste()
 if font.italicangle:
 	font.transform(psMat.skew(font.italicangle * math.pi / 180.0))
 font.transform(psMat.scale(1.5, 1.0))
@@ -20,7 +21,10 @@ font[0xff03].transform(psMat.skew(-10 * math.pi / 180.0))
 font[0xff10].transform(psMat.skew(30 * math.pi / 180.0))
 font[0xff15].transform(psMat.skew(-5 * math.pi / 180.0))
 for glyph in font.selection.byGlyphs:
-	glyph.glyphname = font[glyph.encoding - 0xff00 + 0x20].glyphname + 'monospace'
+	if glyph.encoding == 0xffe5:
+		glyph.glyphname = font[0xa5].glyphname + 'monospace'
+	else:
+		glyph.glyphname = font[glyph.encoding - 0xff00 + 0x20].glyphname + 'monospace'
 	glyph.width = 1226
 	newLayer = fontforge.layer()
 	for contour in glyph.layers[1]:
