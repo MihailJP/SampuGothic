@@ -184,7 +184,7 @@ if args.merge_with is not None:
 		font.selection.none()
 		font2.selection.none()
 		for glyph in glyphsWorthOutputting(font2):
-			if glyph.glyphname not in font:
+			if (glyph.glyphname not in font) and (not list(filter(lambda gn: font[gn].unicode == glyph.unicode, font))):
 				font2.selection.select(('more',), glyph.glyphname)
 				font.selection.select(('more',), glyph.glyphname)
 		font2.copy()
