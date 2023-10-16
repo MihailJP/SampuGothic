@@ -48,7 +48,7 @@ nisui-sanzui.csv variants.csv jisx-0208-hikanji.csv wakammuri.csv sans.csv
 makeglyph.js: makeglyph/makeglyph.js
 	ln -s $< $@
 
-glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst jisx-level2.lst cp932-additional.lst jisx-level3.lst
+glyphs.txt: jisx-0208-hikanji.lst jisx-level1.lst jisx-level2.lst cp932-additional.lst jisx-level3.lst jisx-level4.lst
 	cat $^ | sed -e 's/\s*#.*$$//' -e '/^$$/d'> $@
 
 .INTERMEDIATE: work.scr
