@@ -41,9 +41,9 @@ dump_all_versions.txt: dump.tar.gz
 
 parts.txt: dump_newest_only.txt dump_all_versions.txt \
 mkparts.pl kage-roofed-l2rd.rb replace-glyph.rb \
-nisui-sanzui.csv variants.csv jisx-0208-hikanji.csv wakammuri.csv
+nisui-sanzui.csv variants.csv jisx-0208-hikanji.csv wakammuri.csv sans.csv
 	cat dump_newest_only.txt dump_all_versions.txt | ./mkparts.pl | ./kage-roofed-l2rd.rb | \
-	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv -l wakammuri.csv > $@
+	./replace-glyph.rb -i -l nisui-sanzui.csv -l variants.csv -l jisx-0208-hikanji.csv -l wakammuri.csv -l sans.csv > $@
 
 makeglyph.js: makeglyph/makeglyph.js
 	ln -s $< $@
