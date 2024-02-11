@@ -22,6 +22,10 @@ actionGroup.add_argument(
 	action='store_const', const='scale', dest='action',
 	help="Scales to width specified by -w")
 parser.add_argument(
+	'-M', '--em',
+	type=int,
+	help="Set em size")
+parser.add_argument(
 	'-w', '--width',
 	type=float,
 	help="Set to specified width")
@@ -119,6 +123,9 @@ if args.os2_family_class is not None:
 if args.font_version is not None:
 	font.version = args.font_version
 
+if args.em is not None:
+	font.em = args.em
+
 sfnt = []
 def addSfntNames(lst, strid = None):
 	if lst is not None:
@@ -166,6 +173,7 @@ for glyph in glyphsWorthOutputting(font):
 		glyph.transform(
 			psMat.scale(args.width / glyph.width, 1.0),
 			('partialRefs', 'round'))
+		glyph.width = int(args.width)
 	elif args.action == 'pad':
 		glyph.transform(
 			psMat.translate((args.width - glyph.width) / 2, 0),

@@ -61,9 +61,9 @@ work.sfd: work.scr
 
 .INTERMEDIATE: work-scaled.sfd work-scaled-obl.sfd
 work-scaled.sfd: work.sfd
-	fontforge ./adjustFont.py -sw1226 $< $@
+	fontforge ./adjustFont.py -M1024 -sw1226 $< $@
 work-scaled-obl.sfd: work.sfd
-	fontforge ./adjustFont.py -sw1226 -k10 $< $@
+	fontforge ./adjustFont.py -M1024 -sw1226 -k10 $< $@
 
 .INTERMEDIATE: Inconsolata-LGC.tmp.sfd Inconsolata-LGC-Italic.tmp.sfd
 Inconsolata-LGC.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC.sfd
@@ -95,9 +95,9 @@ work-b.sfd: work-b.scr
 
 .INTERMEDIATE: work-b-scaled.sfd work-b-scaled-obl.sfd
 work-b-scaled.sfd: work-b.sfd
-	fontforge ./adjustFont.py -sw1226 $< $@
+	fontforge ./adjustFont.py -M1024 -sw1226 $< $@
 work-b-scaled-obl.sfd: work-b.sfd
-	fontforge ./adjustFont.py -sw1226 -k10 $< $@
+	fontforge ./adjustFont.py -M1024 -sw1226 -k10 $< $@
 
 .INTERMEDIATE: Inconsolata-LGC-Bold.tmp.sfd Inconsolata-LGC-BoldItalic.tmp.sfd
 Inconsolata-LGC-Bold.tmp.sfd: Inconsolata-LGC/Inconsolata-LGC-Bold.sfd
