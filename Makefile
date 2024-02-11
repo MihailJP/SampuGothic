@@ -22,7 +22,7 @@ ARCHIVES=SampuGothic.tar.xz
 FONT_NAME=SampuGothic
 FONT_NAME_E=Sampu Gothic
 FONT_NAME_J=算譜ゴシック
-FONT_VERSION=0.3
+FONT_VERSION=0.4
 FONT_OPTIONS=-n SampuGothic -n "$(FONT_NAME)" -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)" -V "$(FONT_VERSION)" -r
 
 .PHONY: all fetch clean distclean mostlyclean
