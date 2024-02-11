@@ -19,10 +19,11 @@ ARCHIVE_CONTENTS=$(TARGETS) LICENSE LICENSE.kage.engine \
 LICENSE.kage.glyphs README.md ChangeLog
 ARCHIVES=SampuGothic.tar.xz
 
+FONT_NAME=SampuGothic
 FONT_NAME_E=Sampu Gothic
 FONT_NAME_J=算譜ゴシック
 FONT_VERSION=0.3
-FONT_OPTIONS=-n SampuGothic -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)" -V "$(FONT_VERSION)" -r
+FONT_OPTIONS=-n SampuGothic -n "$(FONT_NAME)" -f "$(FONT_NAME_E)" -F "0x0411:$(FONT_NAME_J)" -V "$(FONT_VERSION)" -r
 
 .PHONY: all fetch clean distclean mostlyclean
 all: $(TARGETS)
@@ -76,12 +77,12 @@ Inconsolata-LGC-Italic.sfd: Inconsolata-LGC-Italic.tmp.sfd
 
 SampuGothic.raw.ttf: Inconsolata-LGC.sfd work-scaled.sfd
 	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
-	-l "$(FONT_NAME_E)" -L "0x0411:$(FONT_NAME_J)" \
+	-n "$(FONT_NAME)" -l "$(FONT_NAME_E)" -L "0x0411:$(FONT_NAME_J)" \
 	-t "Regular" -T "0x0411:標準" --os2-weight=400 \
 	-m work-scaled.sfd $< $@
 SampuGothic-Italic.raw.ttf: Inconsolata-LGC-Italic.sfd work-scaled-obl.sfd
 	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
-	-l "$(FONT_NAME_E) Italic" -L "0x0411:$(FONT_NAME_J) 斜体" \
+	-n "$(FONT_NAME)-Italic" -l "$(FONT_NAME_E) Italic" -L "0x0411:$(FONT_NAME_J) 斜体" \
 	-t "Italic" -T "0x0411:斜体" --os2-weight=400 \
 	-m work-scaled-obl.sfd $< $@
 
@@ -110,12 +111,12 @@ Inconsolata-LGC-BoldItalic.sfd: Inconsolata-LGC-BoldItalic.tmp.sfd
 
 SampuGothic-Bold.raw.ttf: Inconsolata-LGC-Bold.sfd work-b-scaled.sfd
 	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
-	-l "$(FONT_NAME_E) Bold" -L "0x0411:$(FONT_NAME_J) 太字" \
+	-n "$(FONT_NAME)-Bold" -l "$(FONT_NAME_E) Bold" -L "0x0411:$(FONT_NAME_J) 太字" \
 	-t "Bold" -T "0x0411:太字" --os2-weight=700 \
 	-m work-b-scaled.sfd $< $@
 SampuGothic-BoldItalic.raw.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl.sfd
 	fontforge ./adjustFont.py -g $(FONT_OPTIONS) \
-	-l "$(FONT_NAME_E) Bold Italic" -L "0x0411:$(FONT_NAME_J) 太字斜体" \
+	-n "$(FONT_NAME)-BoldItalic" -l "$(FONT_NAME_E) Bold Italic" -L "0x0411:$(FONT_NAME_J) 太字斜体" \
 	-t "Bold Italic" -T "0x0411:太字斜体" --os2-weight=700 \
 	-m work-b-scaled-obl.sfd $< $@
 
