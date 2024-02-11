@@ -124,7 +124,7 @@ SampuGothic-BoldItalic.raw.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl
 %.raw.ttx: %.raw.ttf
 	ttx -o $@ $<
 %.ttx: %.raw.ttx
-	cat $< | sed -e '/isFixedPitch/c <isFixedPitch value="1"/>' -e '/bProportion/c <bProportion value="9"/>' > $@
+	cat $< | sed -e '/isFixedPitch/s/value=".*"/value="1"/' -e '' -e '/bProportion/s/value=".*"/value="9"/' > $@
 %.ttf: %.ttx
 	ttx -o $@ $<
 
