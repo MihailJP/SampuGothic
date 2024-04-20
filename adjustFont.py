@@ -122,6 +122,7 @@ if args.os2_family_class is not None:
 
 if args.font_version is not None:
 	font.version = args.font_version
+	font.sfntRevision = None
 
 if args.em is not None:
 	font.em = args.em
