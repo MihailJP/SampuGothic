@@ -122,11 +122,11 @@ SampuGothic-BoldItalic.raw.ttf: Inconsolata-LGC-BoldItalic.sfd work-b-scaled-obl
 
 .INTERMEDIATE: $(TARGETS:.ttf=.ttx) $(TARGETS:.ttf=.raw.ttx) $(TARGETS:.ttf=.raw.ttf)
 %.raw.ttx: %.raw.ttf
-	ttx -o $@ $<
+	ttx -t post -t "OS/2" -o $@ $<
 %.ttx: %.raw.ttx
 	cat $< | sed -e '/isFixedPitch/s/value=".*"/value="1"/' -e '' -e '/bProportion/s/value=".*"/value="9"/' > $@
-%.ttf: %.ttx
-	ttx -o $@ $<
+%.ttf: %.raw.ttf %.ttx
+	ttx -o $@ -m $^
 
 ChangeLog:
 	./mkchglog.rb > $@
