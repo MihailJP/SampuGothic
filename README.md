@@ -1,6 +1,9 @@
 SampuGothic ― Yet another Japanese coding font
 ===============================================
 
+> [!NOTE]
+> This project is abandoned and superseded by [SampuIshiGothic](https://github.com/MihailJP/SampuIshiGothic).
+
 ## Synopsis ##
 SampuGothic is yet another Japanese coding font and based on
 [Inconsolata LGC][1] and [modified KAGE engine][2].
